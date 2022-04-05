@@ -129,11 +129,11 @@ int main() {
    initCanvas();
    initLife();
    while(1) {
-      munch();
-	  draw(8,8,smiley,t%w,t%h,black);
-	  update();
-      render();
-	  t=t+1;
+    munch();
+    draw(8,8,smiley,t%w,t%h,black);
+    update();
+    render();
+    t=t+1;
    }
    return 0;
 }
