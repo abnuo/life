@@ -26,6 +26,10 @@ function rgb2rgb8(int $r,int $g,int $b) {
     return rgb8toval(floor($r/32),floor($g/32),floor($b/64));
 }
 
+function minvalue(int $v) {
+	return min($v,255);
+}
+
 function getpix($image,int $x,int $y,int $iw,int $ih) {
     return image[$y*$iw+$x];
 }
@@ -151,9 +155,9 @@ function putheader() {
 	echo pack("V*",256);
 	echo pack("V*",0);
 	foreach (range(0,255) as $i) {
-		echo chr($i);
-		echo chr($i);
-		echo chr($i);
+		echo chr(minvalue(round(($i>>5)*36.5)));
+		echo chr(minvalue(round((($i>>2)&7)*36.5)));
+		echo chr(minvalue(($i&3)*85));
 		echo chr(0);
 	}
 }
