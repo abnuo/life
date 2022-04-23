@@ -173,6 +173,7 @@ if ($bmp == "1") {
 	putheader();
 } else {
 	header("Content-Type: application/octet-stream");
+	header('Content-Disposition: attachment; filename="video.raw"');
 	$frames = 255;
 }
 //echo strlen(ob_get_contents());
