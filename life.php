@@ -1,4 +1,5 @@
 <?php
+require "images.php";
 define("w",100);
 define("h",100);
 define("black",0);
@@ -31,18 +32,18 @@ function minvalue(int $v) {
 }
 
 function getpix($image,int $x,int $y,int $iw,int $ih) {
-    return image[$y*$iw+$x];
+    return $image[$y*$iw+$x];
 }
 
 function plot(int $x,int $y,int $c) {
 	global $canvas,$t;
-    $canvas[y%h][x%w] = $c;
+    $canvas[$y%h][$x%w] = $c;
 }
 
 function draw(int $iw,int $ih,$image,int $x,int $y,int $tc) {
     for($iy = 0; $iy<$ih; $iy++) {
         for($ix = 0; $ix<$iw; $ix++) {
-            if($image[iy][ix] != tc) {
+            if($image[$iy][$ix] != $tc) {
                 plot($ix+$x,$iy+$y,$image[$iy][$ix]);
             }
         }
@@ -51,20 +52,20 @@ function draw(int $iw,int $ih,$image,int $x,int $y,int $tc) {
 
 function binarycolor(int $c,int $bg,int $fg) {
     if($c == 0) {
-        return bg;
+        return $bg;
     } else {
-        return fg;
+        return $fg;
     }
 }
 
 function draw_binary(int $iw,int $ih,$data,int $x,int $y,int $bg,int $fg,int $tc) {
-    $img = array_fill(0, ih, array_fill(0, iw, 0));
+    $img = array_fill(0, $ih, array_fill(0, $iw, 0));
     for($y = 0; $y<$ih; $y++) {
        for($x = 0; $x<$iw; $x++) {
-            $img[y][x] = binarycolor(getpix($data,$x,$y,$iw,$ih),$bg,$fg);
+            $img[$y][$x] = binarycolor(getpix($data,$x,$y,$iw,$ih),$bg,$fg);
        }
     }
-    draw(iw,ih,img,x,y,tc);
+    draw($iw,$ih,$img,$x,$y,$tc);
 }
 
 function getNeighbors(int $x,int $y) {
@@ -162,15 +163,22 @@ function putheader() {
 	}
 }
 
-header("Content-Type: image/bmp");
 srand(time());
 initLife();
 ob_start();
-putheader();
+$bmp = $_GET["bmp"];
+if ($bmp == "1") {
+	$frames = 1;
+	header("Content-Type: image/bmp");
+	putheader();
+} else {
+	header("Content-Type: application/octet-stream");
+	$frames = 255;
+}
 //echo strlen(ob_get_contents());
-while($t<1) {
+while($t<$frames) {
 	munch();
-	//draw_binary(lukey_width,lukey_height,lukey_bits,t%w,t%h,magenta,cyan,cyan);
+	draw_binary(lukey_width,lukey_height,array_reverse(lukey_bits),$t%w,$t%h,magenta,cyan,cyan);
 	render();
 	$t++;
 }
