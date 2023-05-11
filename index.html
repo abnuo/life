@@ -1,0 +1,18 @@
+<html>
+<head>
+</head>
+<body>
+<canvas id="canvas" width="500" height="500" style="image-rendering: pixelated;"></canvas>
+<script src="images.js"></script>
+<script src="gl.js"></script>
+<script>
+var t = 0;
+initLife();
+function update() {
+	updateLife();
+	draw_binary(lukey_width,lukey_height,lukey_bits,t%w,t%h,t%256,cyan,cyan);
+	t += 1;
+}
+setInterval(update,1000/60);
+</script>
+</body>
